@@ -1,27 +1,56 @@
 from email.policy import default
 import pandas as pd
 import numpy as np
-import seaborn as sns
+# import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import streamlit as st
 import warnings
 warnings.filterwarnings('ignore')
 df = pd.read_csv("Mall_Customers_Data.csv")
-st.subheader("Mall Customer Spending Habit Interactive Model")
+st.title(f"Mall Customer Spending Habit Interactive Model")
 st.write(df.head())
-st.write(df.describe())
-df.shape
-
+# st.write(df.describe())
+# df.shape
+# st.table(df.head())
+# st.dataframe(df.style.highlight_max(axis=0))
 st.sidebar.header("Query Parameters")
-county = df['County'].unique()
+county = list(df["County"].drop_duplicates())
+county_choice = df['County'].unique()
 st.sidebar.multiselect('Select County:', county)
-gender = df['Gender'].unique()
-st.sidebar.multiselect('Select Gender:', gender)
-age = df['Age'].unique()
-st.sidebar.multiselect('Age:', age)
-annual_income = df['Annual Income (Kes)'].unique()
-st.sidebar.multiselect('Select Annual Income (Kes):', annual_income)
+df = df[df['County'].isin(county_choice)]
+
+st.table(df.head())
+# st.balloons()
+gender_choice = df['Gender'].unique()
+st.sidebar.multiselect('Select Gender:', gender_choice)
+age_choice = df['Age'].unique()
+st.sidebar.multiselect('Age:', age_choice)
+annual_income_choice = df['Annual Income (Kes)'].unique()
+st.sidebar.multiselect('Select Annual Income (Kes):', annual_income_choice)
+# Delete from here when done 
+
+code = """for i in range(2,11,2):
+		   print(i)
+"""
+st.code(code, language = "python")
+
+
+b = st.button("Save")
+if b:
+	st.success("Your submission has been saved successful")
+	# st.balloons()
+
+# st.button("Save", key = "new-key")
+
+# radio buttons
+status =st.radio("What is your status", ("Attended", "Didn't Attended"))
+if status == "Attended":
+	st.success("Thank you for attending")
+else:
+	st.error("Kindly attend the next meeting without fail")
+
+
 
 # county_cust_data=df[['County','CustomerID']]
 # county_cust_data.shape
@@ -29,15 +58,8 @@ df = df.groupby(['County'])['CustomerID'].aggregate('count').reset_index().sort_
 df
 
 #Data Manipulation
-def manipulate_df(df):
-	# Update Gender column to numerical
-	df['Gender'] = df['Gender'].map(lambda x: 0 if x == 'male' else 1)
-    # Update County column to numerical
-	df['County'] = df['County'].map(lambda x: 0 if x == 'Nairobi' else 1)
-	# Fill the nan values in the age column
-	df['Age'].fillna(value = df['Age'].mean() , inplace = True)
-	# Select the desired features
-	df= df[['Gender' , 'Age' , 'County', 'Annual Income(Kes)']]
-	return df
+
+
 
 #Split Data into Train and Test
+
