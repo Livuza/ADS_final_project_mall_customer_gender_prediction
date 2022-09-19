@@ -9,20 +9,21 @@ from PIL import Image
 import warnings
 warnings.filterwarnings('ignore')
 df = pd.read_csv("Mall_Customers_Data.csv")
-st.subheader(f"Mall Customer Spending Habit Interactive Model")
+st.subheader(f"TRM Mall Customer Spending Score Habit Interactive Model")
 st.write(df.head())
 # st.write(df.describe())
 # df.shape
 # st.table(df.head())
 # st.dataframe(df.style.highlight_max(axis=0))
 st.sidebar.header("Query Parameters")
+st.sidebar.markdown(f"by Charles Livuza")
 county = list(df["County"].drop_duplicates())
 county_choice = df['County'].unique()
 st.sidebar.multiselect('Select County:', county)
 df = df[df['County'].isin(county_choice)]
 
 st.table(df.head())
-# st.balloons()
+st.balloons()
 gender_choice = df['Gender'].unique()
 st.sidebar.multiselect('Select Gender:', gender_choice)
 age_choice = df['Age'].unique()
@@ -40,7 +41,7 @@ st.code(code, language = "python")
 b = st.button("Save")
 if b:
 	st.success("Your submission has been saved successful")
-	# st.balloons()
+	st.balloons()
 
 # st.button("Save", key = "new-key")
 
