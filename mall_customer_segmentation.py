@@ -5,10 +5,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import streamlit as st
+from PIL import Image
 import warnings
 warnings.filterwarnings('ignore')
 df = pd.read_csv("Mall_Customers_Data.csv")
-st.title(f"Mall Customer Spending Habit Interactive Model")
+st.subheader(f"Mall Customer Spending Habit Interactive Model")
 st.write(df.head())
 # st.write(df.describe())
 # df.shape
@@ -51,15 +52,30 @@ else:
 	st.error("Kindly attend the next meeting without fail")
 
 
-
 # county_cust_data=df[['County','CustomerID']]
 # county_cust_data.shape
 df = df.groupby(['County'])['CustomerID'].aggregate('count').reset_index().sort_values('CustomerID', ascending=False)
 df
-
+image = Image.open('mall.jpeg')
+st.sidebar.image(image, caption='Mall')
 #Data Manipulation
 
 
 
 #Split Data into Train and Test
 
+def add_bg_from_url():
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background-image: url("https://i0.wp.com/biznakenya.com/wp-content/uploads/2018/07/Thika-Road-Mall.jpg");
+             background-attachment: fixed;
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
+
+add_bg_from_url() 
