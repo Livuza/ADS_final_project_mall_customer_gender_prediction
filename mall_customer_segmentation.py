@@ -30,6 +30,7 @@ age_choice = df['Age'].unique()
 st.sidebar.multiselect('Age:', age_choice)
 annual_income_choice = df['Annual Income (Kes)'].unique()
 st.sidebar.multiselect('Select Annual Income (Kes):', annual_income_choice)
+st.sidebar.button("Check Score")
 # Delete from here when done 
 
 code = """for i in range(2,11,2):
