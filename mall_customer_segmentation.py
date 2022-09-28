@@ -8,9 +8,45 @@ import streamlit as st
 from PIL import Image
 import warnings
 warnings.filterwarnings('ignore')
+
+# st.set_page_config(layout="wide")
+
 df = pd.read_csv("Mall_Customers_Data.csv")
+
+
+
+# data_frame = sns.load_dataset("Mall_Customers_Data.csv")
+# def main():
+#     page = st.sidebar.selectbox(
+#         "Select a Page",
+#         [
+#             "Line Plot"
+#         ]
+#     )
+#     linePlot()
+# def linePlot():
+#     fig = plt.figure(figsize=(10, 4))
+#     sns.lineplot(x = "distance", y = "mass", data = data_frame)
+#     st.pyplot(fig)
+# if __name__ == "__main__":
+#     main()
+
 # markdown(f"TRM Mall Customer Gender Prediction Based on Their Spending Score")
-st.sidebar.write(df.tail(50))
+colmn1= st.sidebar
+colmn2, colmn3 = st.columns((2,1))
+
+colmn1.markdown("""
+## File Uploading
+""")
+colmn1.markdown("""
+[Check CSV File Example Template](https://raw.githubusercontent.com/Livuza/ADS_final_project_mall_customer_spending_score/master/Mall_Customers_Data.csv)
+""")
+
+uploaded_file=colmn1.file_uploader("Upload your input template file (.csv files only)", type= ["csv"])
+
+colmn1.markdown("Mall Customer Dataset")
+
+st.sidebar.write(df)
 # st.write(df.describe())
 # df.shape
 # st.table(df.head())
