@@ -33,6 +33,7 @@ df = pd.read_csv("Mall_Customers_Data.csv")
 # st.sidebar.button("Check Score")
 
 # Dropping the CustomerID column
+sns.heatmap(df.corr(),annot=True)
 df.drop('CustomerID', axis = 1, inplace = True)
 # df
 
