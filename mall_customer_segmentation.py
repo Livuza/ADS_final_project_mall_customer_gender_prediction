@@ -10,7 +10,7 @@ import warnings
 warnings.filterwarnings('ignore')
 df = pd.read_csv("Mall_Customers_Data.csv")
 # markdown(f"TRM Mall Customer Gender Prediction Based on Their Spending Score")
-# st.write(df.head(20))
+st.sidebar.write(df.tail(50))
 # st.write(df.describe())
 # df.shape
 # st.table(df.head())
@@ -33,7 +33,7 @@ df = pd.read_csv("Mall_Customers_Data.csv")
 # st.sidebar.button("Check Score")
 
 # Dropping the CustomerID column
-sns.heatmap(df.corr(),annot=True)
+# st.sns.heatmap(df.corr(),annot=True)
 df.drop('CustomerID', axis = 1, inplace = True)
 # df
 
