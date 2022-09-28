@@ -122,7 +122,7 @@ def main():
      age = st.selectbox("What is the age of the customer?", model_df['Age'].unique())
      annual_income = st.selectbox("What is the the customer's Annual Income in Kes?", model_df['Annual Income (Kes)'].unique())
     with col2:
-     spending_score = st.selectbox("What is the customer's spending score (1-100)", model_df['Spending Score (1-100)'].unique())
+     spending_score = st.slider("What is the customer's spending score (1-100)")
      county = st.selectbox("From which county did the customer shop?", model_df['County'].unique())
      result =""
       
