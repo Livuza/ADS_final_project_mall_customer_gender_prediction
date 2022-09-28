@@ -25,6 +25,8 @@ exceptiongroup==1.0.0rc8
 executing==0.8.3
 fastjsonschema==2.15.3
 fonttools==4.31.2
+# Editable install with no version control (frappe-bench==5.0.0.dev0)
+-e /Users/charleslivuza/bench-repo
 gitdb==4.0.9
 gitdb2==2.0.6
 GitPython==2.1.15

@@ -9,75 +9,154 @@ from PIL import Image
 import warnings
 warnings.filterwarnings('ignore')
 df = pd.read_csv("Mall_Customers_Data.csv")
-st.subheader(f"TRM Mall Customer Spending Score Habit Interactive Model")
-st.write(df.head())
+# markdown(f"TRM Mall Customer Gender Prediction Based on Their Spending Score")
+# st.write(df.head(20))
 # st.write(df.describe())
 # df.shape
 # st.table(df.head())
 # st.dataframe(df.style.highlight_max(axis=0))
-st.sidebar.header("Query Parameters")
-st.sidebar.markdown(f"by Charles Livuza")
-county = list(df["County"].drop_duplicates())
-county_choice = df['County'].unique()
-st.sidebar.multiselect('Select County:', county)
-df = df[df['County'].isin(county_choice)]
+# st.header("Query Parameters")
+# st.markdown(f"by Charles Livuza")
+# county = list(df["County"].drop_duplicates())
 
-st.table(df.head())
-st.balloons()
-gender_choice = df['Gender'].unique()
-st.sidebar.multiselect('Select Gender:', gender_choice)
-age_choice = df['Age'].unique()
-st.sidebar.multiselect('Age:', age_choice)
-annual_income_choice = df['Annual Income (Kes)'].unique()
-st.sidebar.multiselect('Select Annual Income (Kes):', annual_income_choice)
-st.sidebar.button("Check Score")
+# county_choice = df['County'].unique()
+# st.sidebar.multiselect('Select County:', county)
+# df = df[df['County'].isin(county_choice)]
+# # st.table(df.head())
+# # st.balloons()
+# gender_choice = df['Gender'].unique()
+# st.sidebar.multiselect('Select Gender:', gender_choice)
+# age_choice = df['Age'].unique()
+# st.sidebar.multiselect('Age:', age_choice)
+# annual_income_choice = df['Annual Income (Kes)'].unique()
+# st.sidebar.multiselect('Select Annual Income (Kes):', annual_income_choice)
+# st.sidebar.button("Check Score")
+
+# Dropping the CustomerID column
+df.drop('CustomerID', axis = 1, inplace = True)
+# df
+
+# Encode the  ordinal categorical variable column into numbers to aid training of the model
+df['County']= df['County'].map({'Nairobi':0, 'Mombasa':1, 'Kisumu':2})
+df['Gender']= df['Gender'].map({'Male':0, 'Female':1})
+
+# Remove Outliers
+# df = df.drop(df[df["x"]==0].index)
+# df = df.drop(df[df["y"]==0].index)
+# df = df.drop(df[df["z"]==0].index)
+
+# splitting the data into the columns which need to be trained(X) and the target column(y)
+# X = df.iloc[:, :-1]
+# y = df.iloc[:, -1]
+model_df = df.copy()
+X = model_df.drop(['Gender'], axis=1)
+y = model_df['Gender']
+
+# model_df
+# splitting data into training and testing data with 20 % & 80% of data as testing data and training data respectively
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+# importing the random forest classifier model and training it on the dataset
+from sklearn.ensemble import RandomForestClassifier
+classifier = RandomForestClassifier()
+classifier.fit(X_train, y_train)
+
+# predicting on the test dataset
+y_pred = classifier.predict(X_test)
+  
+# finding out the accuracy
+from sklearn.metrics import accuracy_score
+score = accuracy_score(y_test, y_pred)
+# score
+
+# pickling the model
+import pickle
+pickle_out = open("classifier.pkl", "wb")
+pickle.dump(classifier, pickle_out)
+pickle_out.close()
+
+import pickle
+from PIL import Image
+
+# loading in the model to predict on the data
+pickle_in = open('classifier.pkl', 'rb')
+classifier = pickle.load(pickle_in)
+
+def welcome():
+    return 'welcome all'
+
+# defining the function which will make the prediction using 
+# the data which the user inputs
+def prediction(age, annual_income, spending_score, county):  
+   
+    prediction = classifier.predict(
+        [[age, annual_income, spending_score, county]])
+    print(prediction)
+    return prediction
+# this is the main function in which we define our webpage 
+def main():
+      
+    # here we define some of the front end elements of the web page like 
+    # the font and background color, the padding and the text to be displayed
+    html_temp = """
+    <div style ="background-color:padding:13px">
+    <h2 style ="color:white;text-align:center;">Customer Gender Predection Machine Learning App </h2>
+    </div>
+    """
+      
+    # this line allows us to display the front end aspects we have 
+    # defined in the above code
+    st.markdown(html_temp, unsafe_allow_html = True)
+    image = Image.open('mall.jpeg')
+    st.image(image, caption='A mall')
+    # the following lines create select boxes in which the user can enter 
+    # the data required to make the prediction
+    col1, col2 = st.columns(2)
+    with col1:
+     age = st.selectbox("What is the age of the customer?", model_df['Age'].unique())
+     annual_income = st.selectbox("What is the the customer's Annual Income in Kes?", model_df['Annual Income (Kes)'].unique())
+    with col2:
+     spending_score = st.selectbox("What is the customer's spending score (1-100)", model_df['Spending Score (1-100)'].unique())
+     county = st.selectbox("From which county did the customer shop?", model_df['County'].unique())
+     result =""
+      
+    # the below line ensures that when the button called 'Predict' is clicked, 
+    # the prediction function defined above is called to make the prediction 
+    # and store it in the variable result
+    if st.button("Predict"):
+        result = prediction(age, annual_income, spending_score, county)
+    st.success('The gender prediction is {}'.format(result))
+     
+if __name__=='__main__':
+    main()
+st.markdown("This model predicts the mall customer gender depending on age, annual_salary and county. The data used was from the counties of Nairobi, Mombasa and Kisumu.")
+
+
 # Delete from here when done 
 
-code = """for i in range(2,11,2):
-		   print(i)
-"""
-st.code(code, language = "python")
+# code = """for i in range(2,11,2):
+# 		   print(i)
+# """
+# code(code, language = "python")
 
 
-b = st.button("Save")
-if b:
-	st.success("Your submission has been saved successful")
-	st.balloons()
+# b = button("Save")
+# if b:
+# 	success("Your submission has been saved successful")
+# 	balloons()
 
-# st.button("Save", key = "new-key")
+# # st.button("Save", key = "new-key")
 
-# radio buttons
-status =st.radio("What is your status", ("Attended", "Didn't Attended"))
-if status == "Attended":
-	st.success("Thank you for attending")
-else:
-	st.error("Kindly attend the next meeting without fail")
+# # radio buttons
+# status =radio("What is your status", ("Attended", "Didn't Attended"))
+# if status == "Attended":
+# 	success("Thank you for attending")
+# else:
+# 	error("Kindly attend the next meeting without fail")
 
 
 # county_cust_data=df[['County','CustomerID']]
 # county_cust_data.shape
-df = df.groupby(['County'])['CustomerID'].aggregate('count').reset_index().sort_values('CustomerID', ascending=False)
-df
-image = Image.open('mall.jpeg')
-st.sidebar.image(image, caption='Mall')
-#Data Manipulation
-
-
-
-#Split Data into Train and Test
-
-def add_bg_from_url():
-    st.markdown(
-         f"""
-         <style>
-         .stApp {{
-             background-image: url("https://i0.wp.com/biznakenya.com/wp-content/uploads/2018/07/Thika-Road-Mall.jpg");
-             background-attachment: fixed;
-             background-size: cover
-         }}
-         </style>
-         """,
-         unsafe_allow_html=True
-     )
-
-add_bg_from_url() 
+# df = df.groupby(['County'])['CustomerID'].aggregate('count').reset_index().sort_values('CustomerID', ascending=False)
+# df
