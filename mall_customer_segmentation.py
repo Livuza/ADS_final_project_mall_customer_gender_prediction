@@ -109,8 +109,12 @@ def main():
     # this line allows us to display the front end aspects we have 
     # defined in the above code
     st.markdown(html_temp, unsafe_allow_html = True)
+
+
+    import base64
     image = Image.open('mall.jpeg')
     st.image(image, caption='A mall')
+
     # the following lines create select boxes in which the user can enter 
     # the data required to make the prediction
     col1, col2 = st.columns(2)
@@ -127,12 +131,22 @@ def main():
     # and store it in the variable result
     if st.button("Predict"):
         result = prediction(age, annual_income, spending_score, county)
-    st.success('The gender prediction is {}'.format(result))
+        if result == 0:
+            # st.success('The gender prediction is {}'.format(result))
+            st.success("The predicted Gender is Male")
+        else:
+            # st.success('The gender prediction is {}'.format(result))
+            st.success("The predicted Gender is Female")
      
 if __name__=='__main__':
     main()
 st.markdown("This model predicts the mall customer gender depending on age, annual_salary and county. The data used was from the counties of Nairobi, Mombasa and Kisumu.")
 
+# plt.figure(figsize=(20,10))
+
+# plt.subplot(2,2,1)
+# sns.barplot(x=df.groupby('Gender')['Spending Score (1-100)'].mean().sort_values(ascending=True).index,y=df.groupby('Gender')['Spending Score (1-100)'].mean().sort_values(ascending=True).values)
+# plt.title('Customer Spending Based on Gender')
 
 # Delete from here when done 
 
