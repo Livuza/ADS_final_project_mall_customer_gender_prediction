@@ -138,7 +138,7 @@ def main():
     # the font and background color, the padding and the text to be displayed
     html_temp = """
     <div style ="background-color:padding:13px">
-    <h2 style ="color:white;text-align:center;">Customer Gender Predection Machine Learning App </h2>
+    <h2 style ="color:black;text-align:center;">Customer Gender Predection Machine Learning App </h2>
     </div>
     """
       
@@ -147,9 +147,9 @@ def main():
     st.markdown(html_temp, unsafe_allow_html = True)
 
 
-    import base64
-    image = Image.open('mall.jpeg')
-    st.image(image, caption='A mall')
+    # import base64
+    # image = Image.open('mall.jpeg')
+    # st.image(image, caption='A mall')
 
     # the following lines create select boxes in which the user can enter 
     # the data required to make the prediction
@@ -211,3 +211,22 @@ st.markdown("This model predicts the mall customer gender depending on age, annu
 # county_cust_data.shape
 # df = df.groupby(['County'])['CustomerID'].aggregate('count').reset_index().sort_values('CustomerID', ascending=False)
 # df
+
+
+import base64
+
+def add_bg_from_local(image_file):
+    with open(image_file, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+    st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url(data:image/{"jpeg"};base64,{encoded_string.decode()});
+        background-size: cover
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+add_bg_from_local('mall.jpeg')  
